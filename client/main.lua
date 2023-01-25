@@ -142,7 +142,7 @@ AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName,
     currentVehicle = nil
 end)
 
-ESX.RegisterInput('esx_cruisecontrol:Enable', Translate('cruiseControl'), "keyboard", "U", function()
+ESX.RegisterInput('esx_cruisecontrol:Enable', Translate('cruiseControl'), "keyboard", Config.ToggleKey, function()
     if not currentVehicle then return end
     Enable()
 end)
