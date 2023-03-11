@@ -1,7 +1,7 @@
 Locales['nl'] = {
   ['activated']   = 'geactiveerd',
   ['deactivated'] = 'gedeactiveerd',
-  ['increaseSpeed'] = 'Increase Speed',
-  ['decreaseSpeed'] = 'Decrease Speed',
+  ['increaseSpeed'] = 'Verhoog snelheid',
+  ['decreaseSpeed'] = 'Verlaag snelheid',
   ['cruiseControl'] = 'Cruise Control'
 }
