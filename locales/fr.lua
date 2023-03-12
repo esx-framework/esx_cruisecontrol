@@ -1,7 +1,7 @@
 Locales['fr'] = {
   ['activated']   = 'activé',
   ['deactivated'] = 'désactivé',
-  ['increaseSpeed'] = 'Increase Speed',
-  ['decreaseSpeed'] = 'Decrease Speed',
-  ['cruiseControl'] = 'Cruise Control'
+  ['increaseSpeed'] = 'Augmenter la vitesse',
+  ['decreaseSpeed'] = 'Diminuer la vitesse',
+  ['cruiseControl'] = 'Régulateur de vitesse'
 }
