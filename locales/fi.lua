@@ -1,7 +1,7 @@
 Locales['fi'] = {
-  ['activated']   = 'aktivoitu',
-  ['deactivated'] = 'sammutettu',
-  ['increaseSpeed'] = 'Increase Speed',
-  ['decreaseSpeed'] = 'Decrease Speed',
-  ['cruiseControl'] = 'Cruise Control'
+  ['activated']   = 'Aktivoitu',
+  ['deactivated'] = 'Deaktivoitu',
+  ['increaseSpeed'] = 'Nosta nopeutta',
+  ['decreaseSpeed'] = 'Laske nopeutta',
+  ['cruiseControl'] = 'Vakionopeudensäädin'
 }
