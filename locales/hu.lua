@@ -1,7 +1,7 @@
 Locales['hu'] = {
   ['activated']   = 'Bekapcsolva',
   ['deactivated'] = 'Kikapcsolva',
-  ['increaseSpeed'] = 'Sebbeség nővelése',
+  ['increaseSpeed'] = 'Sebbeség növelése',
   ['decreaseSpeed'] = 'Sebbeség csökkenentése',
   ['cruiseControl'] = 'Tempomat'
 }
