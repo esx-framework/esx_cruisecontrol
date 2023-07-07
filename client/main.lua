@@ -139,8 +139,8 @@ end
 
 AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat, displayName, netId)
     currentVehicle = vehicle
-    driverCheckThread()
 	CreateThread(seatbeltThread)
+    driverCheckThread()
 end)
 
 AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName, netId)
