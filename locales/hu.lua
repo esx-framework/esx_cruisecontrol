@@ -3,5 +3,10 @@ Locales['hu'] = {
   ['deactivated'] = 'Kikapcsolva',
   ['increaseSpeed'] = 'Sebbeség növelése',
   ['decreaseSpeed'] = 'Sebbeség csökkenentése',
-  ['cruiseControl'] = 'Tempomat'
+  ['cruiseControl'] = 'Tempomat',
+
+  --Seatbelt
+  ['toggleSeatbelt'] = "Toggle Seatbelt",
+  ["seatbeltOn"] = "Seatbelt ON",
+  ["seatbeltOff"] = "Seatbelt OFF"
 }

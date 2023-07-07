@@ -1,7 +1,15 @@
 local cruiseActive, increasePressure, lastEngineHealth, currentCCSpeed, lastIdealPedalPressure, isDriver = false, false, 0, 0, 0.0, false
 local speedDiffTolerance = (0.5 / 3.6)
-local esx_hud = GetResourceState('esx_hud') == 'started' and true or false
 currentVehicle = nil
+isHudReady = GetResourceState(Config.UsedHud) == 'started' and true or false
+
+local function setCruiseControlState(currentState)
+	if not isHudReady or not exports[Config.UsedHud] then
+		return
+	end
+	
+	exports[Config.UsedHud]:CruiseControlState(currentState)
+end
 
 local function driverCheck(vehicle)
     if not DoesEntityExist(vehicle) then return false end
@@ -68,9 +76,7 @@ local function Reset()
     lastEngineHealth = 0
     lastIdealPedalPressure = 0.0
 
-    if esx_hud then
-        exports.esx_hud:CruiseControlState(false)
-    end
+    setCruiseControlState(false)
 
     ESX.ShowNotification(Translate('deactivated', 5000, 'info'))
 end
@@ -85,9 +91,7 @@ local function Enable()
         currentCCSpeed = CalculateSpeed() or 0
         if currentCCSpeed == 0 then cruiseActive = false return end
 
-        if esx_hud then
-            exports.esx_hud:CruiseControlState(true)
-        end
+        setCruiseControlState(true)
 
         ESX.ShowNotification(Translate('activated', 5000, 'info'))
 
