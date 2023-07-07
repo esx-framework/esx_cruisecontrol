@@ -44,3 +44,7 @@ ESX.RegisterInput('esx_cruisecontrol:ToggleSeatbelt', Translate('toggleSeatbelt'
     if not currentVehicle then return end
     seatbelt = not seatbelt
 end)
+
+exports('isSeatbeltOn', function()
+	return seatbelt
+end)
