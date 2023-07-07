@@ -1,10 +1,17 @@
 local cacheVeh, carArray, seatbelt, vehSpeed, previousVelocity = nil, {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20}, false, 0.0, vector3(0,0,0)
 
-local function setSeatbeltState(currentState)
-	if not isHudReady or not exports[Config.UsedHud] then
-		return
+local function disableVehicleExit()
+	while true do
+		if not seatbelt then break end
+		DisableControlAction(0, 75)
+		Wait(0)
 	end
-	
+end
+
+local function setSeatbeltState(currentState)
+	if not isHudReady or not exports[Config.UsedHud] then return end
+
+	CreateThread(disableVehicleExit)
 	exports[Config.UsedHud]:SeatbeltState(currentState)
 end
 
@@ -17,9 +24,7 @@ local function seatbeltLogic()
 
     SetPedConfigFlag(playerPed, 32, true)
 
-    if seatbelt then 
-		return DisableControlAction(0, 75)
-	end
+    if seatbelt then return end
 
     local isVehMovingFwd = GetEntitySpeedVector(cacheVeh, true).y > 1.0
     local vehAcceleration = (prevSpeed - vehSpeed) / GetFrameTime()
@@ -33,12 +38,9 @@ local function seatbeltLogic()
 	end
 end
 
-CreateThread(function()
+function seatbeltThread()
 	while true do
-		if not currentVehicle then 
-			Wait(2000)
-			return
-		end
+		if not currentVehicle then break end
 		if not cacheVeh or cacheVeh ~= currentVehicle then
 			local vehClass = GetVehicleClass(currentVehicle)
 			for i = 1, #carArray do
@@ -52,7 +54,7 @@ CreateThread(function()
 		seatbeltLogic()
 		Wait(200)
 	end
-end)
+end
 
 ESX.RegisterInput('esx_cruisecontrol:ToggleSeatbelt', Translate('toggleSeatbelt'), "keyboard", Config.SeatbeltKey, function()
     if not currentVehicle then return end
