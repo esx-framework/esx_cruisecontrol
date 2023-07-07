@@ -3,5 +3,10 @@ Locales['sl'] = {
   ['deactivated'] = 'Tempomat Izključen',
   ['increaseSpeed'] = 'Povečajte hitrost',
   ['decreaseSpeed'] = 'Zmanjšajte hitrost',
-  ['cruiseControl'] = 'Tempomat'
+  ['cruiseControl'] = 'Tempomat',
+
+  --Seatbelt
+  ['toggleSeatbelt'] = "Toggle Seatbelt",
+  ["seatbeltOn"] = "Seatbelt ON",
+  ["seatbeltOff"] = "Seatbelt OFF"
 }
