@@ -1,7 +1,7 @@
-local cruiseActive, increasePressure, lastEngineHealth, currentCCSpeed, lastIdealPedalPressure = false, false, 0, 0, 0.0
+local cruiseActive, increasePressure, lastEngineHealth, currentCCSpeed, lastIdealPedalPressure, isDriver = false, false, 0, 0, 0.0, false
 local speedDiffTolerance = (0.5 / 3.6)
-local currentVehicle, isDriver = nil, false
 local esx_hud = GetResourceState('esx_hud') == 'started' and true or false
+currentVehicle = nil
 
 local function driverCheck(vehicle)
     if not DoesEntityExist(vehicle) then return false end
