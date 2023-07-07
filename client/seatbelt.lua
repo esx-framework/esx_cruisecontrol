@@ -17,7 +17,9 @@ local function seatbeltLogic()
 
     SetPedConfigFlag(playerPed, 32, true)
 
-    if seatbelt then return end
+    if seatbelt then 
+		return DisableControlAction(0, 75)
+	end
 
     local isVehMovingFwd = GetEntitySpeedVector(cacheVeh, true).y > 1.0
     local vehAcceleration = (prevSpeed - vehSpeed) / GetFrameTime()
@@ -32,7 +34,11 @@ local function seatbeltLogic()
 end
 
 CreateThread(function()
-	while currentVehicle do
+	while true do
+		if not currentVehicle then 
+			Wait(2000)
+			return
+		end
 		if not cacheVeh or cacheVeh ~= currentVehicle then
 			local vehClass = GetVehicleClass(currentVehicle)
 			for i = 1, #carArray do
