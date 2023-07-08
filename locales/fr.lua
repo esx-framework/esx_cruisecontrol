@@ -1,12 +1,12 @@
 Locales['fr'] = {
-  ['activated']   = 'activé',
-  ['deactivated'] = 'désactivé',
+  ['activated']   = 'Activé',
+  ['deactivated'] = 'Désactivé',
   ['increaseSpeed'] = 'Augmenter la vitesse',
   ['decreaseSpeed'] = 'Diminuer la vitesse',
   ['cruiseControl'] = 'Régulateur de vitesse',
 
   --Seatbelt
-  ['toggleSeatbelt'] = "Toggle Seatbelt",
-  ["seatbeltOn"] = "Seatbelt ON",
-  ["seatbeltOff"] = "Seatbelt OFF"
+  ['toggleSeatbelt'] = "Mettre/enlever la ceinture de sécurité",
+  ["seatbeltOn"] = "Ceinture de sécurité mise",
+  ["seatbeltOff"] = "Ceinture de sécurité enlevée"
 }
