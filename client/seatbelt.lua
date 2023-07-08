@@ -1,68 +1,75 @@
-local cacheVeh, carArray, seatbelt, vehSpeed, previousVelocity = nil, {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20}, false, 0.0, vector3(0,0,0)
+SB = {
+	cacheVeh = nil,
+	carArray = {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20},
+	seatbelt = false,
+	vehSpeed = 0.0,
+	previousVelocity = vector3(0,0,0),
+	Reset = function(self)
+		self.cacheVeh = nil
+		self.carArray = {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20}
+		self.seatbelt = false
+		self.vehSpeed = 0.0
+	end,
+	EjectoSeato = function(self)
+		local position = GetEntityCoords(Utils.ped)
+		SetEntityCoords(Utils.ped, position.x, position.y, position.z - 0.47, true, true, true, false)
+        SetEntityVelocity(Utils.ped, self.previousVelocity.x, self.previousVelocity.y, self.previousVelocity.z)
+        SetPedToRagdoll(Utils.ped, 1000, 1000, 0, false, false, false)
+		self:Reset()
+	end,
+	Logic = function(self)
+		local prevSpeed = self.vehSpeed
+		self.vehSpeed = GetEntitySpeed(self.cacheVeh)
+		SetPedConfigFlag(Utils.ped, 32, true)
 
-local function disableVehicleExit()
-	while true do
-		if not seatbelt then break end
-		DisableControlAction(0, 75)
-		Wait(0)
-	end
-end
-
-local function setSeatbeltState(currentState)
-	if not isHudReady or not exports[Config.UsedHud] then return end
-
-	CreateThread(disableVehicleExit)
-	exports[Config.UsedHud]:SeatbeltState(currentState)
-end
-
-local function seatbeltLogic()
-	local prevSpeed = vehSpeed
-    vehSpeed = GetEntitySpeed(cacheVeh)
-
-	local playerPed = ESX.PlayerData.ped
-	local position = GetEntityCoords(playerPed)
-
-    SetPedConfigFlag(playerPed, 32, true)
-
-    if seatbelt then return end
-
-    local isVehMovingFwd = GetEntitySpeedVector(cacheVeh, true).y > 1.0
-    local vehAcceleration = (prevSpeed - vehSpeed) / GetFrameTime()
-
-    if (isVehMovingFwd and (prevSpeed > (45/2.237)) and (vehAcceleration > (100*9.81))) then
-        SetEntityCoords(playerPed, position.x, position.y, position.z - 0.47, true, true, true)
-        SetEntityVelocity(playerPed, previousVelocity.x, previousVelocity.y, previousVelocity.z)
-        SetPedToRagdoll(playerPed, 1000, 1000, 0, 0, 0, 0)
-    else
-        previousVelocity = GetEntityVelocity(cacheVeh)
-	end
-end
-
-function seatbeltThread()
-	while true do
-		if not currentVehicle then break end
-		if not cacheVeh or cacheVeh ~= currentVehicle then
-			local vehClass = GetVehicleClass(currentVehicle)
-			for i = 1, #carArray do
-				if carArray[i] == vehClass then
-					cacheVeh = currentVehicle
-					seatbeltLogic()
-					return
-				end
-			end
+		if self.seatbelt then
+			return DisableControlAction(0, 75, false)
 		end
-		seatbeltLogic()
-		Wait(200)
-	end
-end
 
-ESX.RegisterInput('esx_cruisecontrol:ToggleSeatbelt', Translate('toggleSeatbelt'), "keyboard", Config.SeatbeltKey, function()
-    if not currentVehicle then return end
-    seatbelt = not seatbelt
-	setSeatbeltState(seatbelt)
-	ESX.ShowNotification(Translate(seatbelt and 'seatbeltOn' or 'seatbeltOff', 5000, 'info'))
-end)
+		local isVehMovingFwd = GetEntitySpeedVector(self.cacheVeh, true).y > 1.0
+		local vehAcceleration = (prevSpeed - self.vehSpeed) / GetFrameTime()
+
+		if (isVehMovingFwd and (prevSpeed > (45/2.237)) and (vehAcceleration > (100*9.81))) then
+			self:EjectoSeato()
+		else
+			self.previousVelocity = GetEntityVelocity(self.cacheVeh)
+		end
+	end,
+	Thread = function(self)
+		CreateThread(function ()
+			while self.seatbelt do
+				if not Utils.vehicle then break end
+				if not self.cacheVeh or self.cacheVeh ~= Utils.vehicle then
+					local vehClass = GetVehicleClass(Utils.vehicle)
+					for i = 1, #self.carArray do
+						if self.carArray[i] == vehClass then
+							self.cacheVeh = Utils.vehicle
+							self:Logic()
+							return
+						end
+					end
+				end
+				self:Logic()
+				Wait(200)
+			end
+		end)
+	end,
+	DisableExit = function(self)
+		CreateThread(function ()
+			while self.seatbelt do
+				DisableControlAction(0, 75, true)
+				Wait(0)
+			end
+		end)
+	end,
+	SetState = function(self, state)
+		if not Config.Seatbelt.Enable then return end
+		Utils:SetHudState(state, true)
+		if not state then return end
+		self:DisableExit()
+	end
+}
 
 exports('isSeatbeltOn', function()
-	return seatbelt
+	return SB.seatbelt
 end)
