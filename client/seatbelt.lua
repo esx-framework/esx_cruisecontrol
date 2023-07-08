@@ -65,7 +65,10 @@ SB = {
 	SetState = function(self, state)
 		if not Config.Seatbelt.Enable then return end
 		Utils:SetHudState(state, true)
-		if not state then return end
+		if not state then
+			self:Reset()
+			return
+		end
 		self:DisableExit()
 	end
 }
