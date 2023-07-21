@@ -5,14 +5,14 @@ Config = {
         Enable = true,
         Key = "CAPITAL",
         Export = function (state)
-            exports['esx_hud']:CruiseControlState(state)
+            exports[Config.HudResource]:CruiseControlState(state)
         end,
     },
     Seatbelt = {
         Enable = true,
         Key = "B",
         Export = function (state)
-            exports['esx_hud']:SeatbeltState(state)
+            exports[Config.HudResource]:SeatbeltState(state)
         end
     }
 }
