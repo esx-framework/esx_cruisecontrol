@@ -14,7 +14,7 @@ CC = {
         self.lastEngineHealth = 0
         self.lastIdealPedalPressure = 0.0
 
-        self:SetHudState(false)
+        Utils:SetHudState(false)
     end,
     ApplyIdealPedalPressure = function(self)
         if not Utils:DriverCheck() then return end
@@ -45,7 +45,7 @@ CC = {
     Enable = function(self)
         if not Config.Cruise.Enable then return end
         if not Utils:DriverCheck() then return end
-        if not self.cruiseActive then self:Reset() return end
+
         self.cruiseActive = true
         self.lastEngineHealth = GetVehicleEngineHealth(Utils.vehicle)
 
@@ -101,6 +101,11 @@ CC = {
 --Handlers
 AddEventHandler('esx:playerPedChanged', function(newPed)
     Utils.ped = newPed
+end)
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded',function(xPlayer, isNew, skin)
+    Utils.ped = PlayerPedId()
 end)
 
 AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat, displayName, netId)
