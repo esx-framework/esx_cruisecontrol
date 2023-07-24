@@ -4,8 +4,8 @@ on:
   issues:
     types:
       - opened
-  pull_request_target:
-    types: 
+  pull_request:
+    types:
       - opened
 
 jobs:
