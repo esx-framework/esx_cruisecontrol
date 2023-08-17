@@ -1,5 +1,6 @@
 SB = {
 	cacheVeh = nil,
+	isRagdoll = false,
 	carArray = {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20},
 	seatbelt = false,
 	vehSpeed = 0.0,
@@ -9,13 +10,16 @@ SB = {
 		self.carArray = {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20}
 		self.seatbelt = false
 		self.vehSpeed = 0.0
+		self.isRagdoll = false
 	end,
-	EjectoSeato = function(self)
+	EjectSeat = function(self)
 		local position = GetEntityCoords(Utils.ped)
 		SetEntityCoords(Utils.ped, position.x, position.y, position.z - 0.47, true, true, true, false)
         SetEntityVelocity(Utils.ped, self.previousVelocity.x, self.previousVelocity.y, self.previousVelocity.z)
-        SetPedToRagdoll(Utils.ped, 1000, 1000, 0, false, false, false)
-		self:Reset()
+		self:SetRagdoll()
+		Citizen.SetTimeout((Config.Seatbelt.RagdollTime or 1) * 1000, function()
+			self:Reset()
+		end)
 	end,
 	Logic = function(self)
 		local prevSpeed = self.vehSpeed
@@ -28,24 +32,25 @@ SB = {
 
 		local isVehMovingFwd = GetEntitySpeedVector(self.cacheVeh, true).y > 1.0
 		local vehAcceleration = (prevSpeed - self.vehSpeed) / GetFrameTime()
+		local speedIsBiggerThanConfigMPH = prevSpeed > ((Config.Seatbelt.EjectCheckSpeed or 45)/2.237)
+		local reallyFast = vehAcceleration > (100*9.81)
 
-		if (isVehMovingFwd and (prevSpeed > (45/2.237)) and (vehAcceleration > (100*9.81))) then
-			self:EjectoSeato()
+		if (isVehMovingFwd and speedIsBiggerThanConfigMPH and reallyFast) then
+			self:EjectSeat()
 		else
 			self.previousVelocity = GetEntityVelocity(self.cacheVeh)
 		end
 	end,
 	Thread = function(self)
 		CreateThread(function ()
-			while self.seatbelt do
+			while true do
 				if not Utils.vehicle then break end
 				if not self.cacheVeh or self.cacheVeh ~= Utils.vehicle then
 					local vehClass = GetVehicleClass(Utils.vehicle)
 					for i = 1, #self.carArray do
 						if self.carArray[i] == vehClass then
 							self.cacheVeh = Utils.vehicle
-							self:Logic()
-							return
+							break
 						end
 					end
 				end
@@ -70,6 +75,15 @@ SB = {
 			return
 		end
 		self:DisableExit()
+	end,
+	SetRagdoll = function(self)
+		self.isRagdoll = true
+		CreateThread(function()
+			while self.isRagdoll do
+				Wait(0)
+				SetPedToRagdoll(Utils.ped, 1000, 1000, 0, false, false, false)
+			end
+		end)
 	end
 }
 
