@@ -117,3 +117,10 @@ end)
 AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName, netId)
     Utils.vehicle = nil
 end)
+
+AddEventHandler('onResourceStart', function(resourceName)
+    if (GetCurrentResourceName() ~= resourceName) then
+        return
+    end
+    Utils.ped = PlayerPedId()
+end)
